@@ -85,7 +85,7 @@ MEDIA_URL = '/media/'
 
 DATABASES = {
     'default': {
-        'NAME': 'ski_resort_7',
+        'NAME': 'ski_resort',
         'ENGINE': 'django.db.backends.mysql',
         'USER': 'root',
         'PASSWORD': 'naz142227:Dg',

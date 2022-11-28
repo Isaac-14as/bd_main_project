@@ -24,6 +24,8 @@ urlpatterns = [
 
 
     path('print_table/<slug:table>/', print_table, name='print_table'),
-    path('delete/<slug:table>/<int:id>/', delete, name='delete')
+    path('delete/<slug:table>/<int:id>/', delete, name='delete'),
+    path('add/<slug:table>/', add, name='add'),
+    path('redaction/<slug:table>/<int:id>/', redaction, name='redaction'),
 
 ]
