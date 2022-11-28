@@ -2,17 +2,17 @@
 
 
 
-{% comment %} {% block links %}
+{% block links %}
   {% load static %} 
-  <link rel="stylesheet" href="{% static 'report/css/delete_user.css' %}">  
-{% endblock %} {% endcomment %}
+  <link rel="stylesheet" href="{% static 'main_part/css/delete.css' %}">  
+{% endblock %}
 
 {% block index_content %}
-<form action="" method="post">
+<form class="qwe" action="" method="post">
   {% csrf_token %}
   <div class="title_h">
     <h2>Вы действительно ходите удалить запись?</h2>
-    <button type="submit" name="button" class="btn btn btn-danger">Да</button> 
+    <button type="submit" name="button" class="btn btn btn-danger w-50">Да</button> 
   </div>
 </form>
 

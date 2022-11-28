@@ -8,13 +8,40 @@ class JobService():
                 port=3306,
                 user='root',
                 password='naz142227:Dg',
-                database='ski_resort_2',
+                database='ski_resort',
             )
             print('successfully connected...')
         except Exception as ex:
             print('Connectios refused...')
             print(ex)
     
+
+    def delete(self, table, id):
+        cursor = self.conn.cursor()
+        a = 'id_' + table
+        cursor.execute(f"DELETE FROM {table} WHERE {a}={id}")
+        self.conn.commit()
+        self.conn.close()
+
+    def get_table_for_print(self, table):
+        cursor = self.conn.cursor()
+        a = f"""'{table}'"""
+        cursor.execute(f"SELECT Column_name FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME LIKE {a} and TABLE_SCHEMA  = 'ski_resort'")
+        result = cursor.fetchall()
+        cursor.execute(f"SELECT * FROM {table}")
+        result_1 = cursor.fetchall()
+        m = []
+        for i in result:
+            m.append(i[0])
+        c = {
+            'columns': m,
+            'table_info': result_1,
+            'table': table,
+        }
+        return c
+
+
+
     # def get_job_title_list(self):
     #     cursor = self.conn.cursor()
     #     cursor.execute("SELECT * FROM job_title")
@@ -74,29 +101,6 @@ class JobService():
     #     self.conn.close()
     
 
-    def delete(self, table, id):
-        cursor = self.conn.cursor()
-        a = 'id_' + table
-        cursor.execute(f"DELETE FROM {table} WHERE {a}={id}")
-        self.conn.commit()
-        self.conn.close()
-
-    def get_table_for_print(self, table):
-        cursor = self.conn.cursor()
-        a = f"""'{table}'"""
-        cursor.execute(f"SELECT Column_name FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME LIKE {a} and TABLE_SCHEMA  = 'ski_resort_2'")
-        result = cursor.fetchall()
-        cursor.execute(f"SELECT * FROM {table}")
-        result_1 = cursor.fetchall()
-        m = []
-        for i in result:
-            m.append(i[0])
-        c = {
-            'columns': m,
-            'table_info': result_1,
-            'table': table,
-        }
-        return c
 
 
 

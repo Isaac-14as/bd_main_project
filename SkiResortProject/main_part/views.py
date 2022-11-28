@@ -100,7 +100,7 @@ def print_table(request, table):
     context = bd.get_table_for_print(table)
     return render(request, template, context)
 
-# функция работает для всех таблиц
+# функция удаления для всех таблиц (проблема с связанными таблицами)
 def delete(request, table, id):
     template = "main_part/delete.html"
     bd = JobService()

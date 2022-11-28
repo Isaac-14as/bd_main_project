@@ -1,0 +1,10 @@
+.title_h { 
+    width: 700px;
+    margin: 0 auto;
+    margin-top: 200px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    
+}

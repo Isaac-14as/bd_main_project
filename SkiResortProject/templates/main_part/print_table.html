@@ -7,12 +7,17 @@
 {% endblock %}
 
 {% block index_content %}
+  <div class="title_h">
+    <h3>{{ table }}</h3>
+  </div>
   <table class="table">
     <thead>
       <tr>
         {% for item_col in columns %}
           <th scope="col">{{item_col}}</th>
         {% endfor %}
+        <th></th>
+        <th></th>
       </tr>
     </thead>
     <tbody>
