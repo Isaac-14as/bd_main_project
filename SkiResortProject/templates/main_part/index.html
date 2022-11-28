@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+
+{% block links %}
+  {% load static %} 
+  <link rel="stylesheet" href="{% static 'main_part/css/index.css' %}">  
+{% endblock %}
+
+{% block index_content %}
+  <div class="text_box">
+    <p>Добро пожаловать на сайт.</p>
+    <p>Здесь вы можете администрировать БД по теме "Горнолыжный курорт".</p>
+  </div>
+{% endblock %}
+

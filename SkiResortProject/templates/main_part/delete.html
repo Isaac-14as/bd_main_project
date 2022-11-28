@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+
+
+{% comment %} {% block links %}
+  {% load static %} 
+  <link rel="stylesheet" href="{% static 'report/css/delete_user.css' %}">  
+{% endblock %} {% endcomment %}
+
+{% block index_content %}
+<form action="" method="post">
+  {% csrf_token %}
+  <div class="title_h">
+    <h2>Вы действительно ходите удалить запись?</h2>
+    <button type="submit" name="button" class="btn btn btn-danger">Да</button> 
+  </div>
+</form>
+
+{% endblock %}

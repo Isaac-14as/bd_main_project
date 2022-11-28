@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+
+
+{% block links %}
+  {% load static %} 
+  <link rel="stylesheet" href="{% static 'main_part/css/job_title.css' %}">  
+{% endblock %}
+
+{% block index_content %}
+  <table class="table">
+    <thead>
+      <tr>
+        {% for item_col in columns %}
+          <th scope="col">{{item_col}}</th>
+        {% endfor %}
+      </tr>
+    </thead>
+    <tbody>
+      {% for item_row in table_info %}
+      <tr>
+        {% for item_value in item_row %}
+          <td>{{item_value}}</td>
+        {% endfor %}
+        <td><button type="button" class="btn btn-primary">Редактировать</button></td>
+        <td><a href="{% url 'delete' table item_row.0  %}" type="button" class="btn btn-danger">Удалить</a></td>
+
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <div class="btn_add"><button type="button" class="btn btn-success">Добавить запись</button></div>
+
+{% endblock %}
+
