@@ -1,5 +1,6 @@
 import pymysql
 
+
 class JobService():
     def __init__(self):
         try:
@@ -20,26 +21,64 @@ class JobService():
     def get_columns_names(self, table):
         cursor = self.conn.cursor()
         a = f"""'{table}'"""
-        cursor.execute(f"SELECT Column_name FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME LIKE {a} and TABLE_SCHEMA  = 'ski_resort'")
+        cursor.execute(f"SELECT Column_name FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME LIKE {a} and TABLE_SCHEMA  = 'ski_resort' ORDER BY ORDINAL_POSITION")
         result = cursor.fetchall()
         m = []
         for i in result:
             m.append(i[0])
         return m
+    
+    def get_columns_names_ru(self, table):
+        d = {
+            'job_title': ['id', 'название должности', 'заработная плата'],
+            'hotel_room': ['id', 'номер', 'цена за ночь'],
+            'track': ['id', 'название трассы', 'уровень сложности', 'цена'],
+            'employee': ['id', 'имя сотрудника', 'название должности'],
+            'user': ['id', 'имя пользователя', 'номер отеля'],
+            'inventory': ['id', 'название инвентаря', 'цена аренды'],
+            'event': ['id', 'название инвентаря', 'имя сотрудника', 'имя пользователя', 'название трассы'],
+            }
+        return d[table]
+    
+    def get_table_name_ru(self, table):
+        d = {
+            'job_title': 'Должности',
+            'hotel_room': 'Номера отеля',
+            'track': 'Трассы',
+            'employee': 'Сотрудники',
+            'user': 'Пользователи',
+            'inventory': 'Инвентарь',
+            'event': 'События',
+        }
+        return d[table]
 
 
-    def get_table_for_print(self, table):
+    def get_table_for_print(self, table, page_number):
         cursor = self.conn.cursor()
         cursor.execute(f"SELECT * FROM {table}")
         result_1 = cursor.fetchall()
+        m = []
+        m_1 = []
+        for i in range(len(result_1)):
+            m_1.append(result_1[i])
+            if len(m_1) == 10:
+                m.append(m_1)
+                m_1 = []
+        if len(m_1) != 0:
+            m.append(m_1)
         c = {
-            'columns': self.get_columns_names(table),
-            'table_info': result_1,
+            'columns': self.get_columns_names_ru(table),
+            'table_info': m[page_number],
+            'number_of_pages': m,
             'table': table,
+            'table_ru': self.get_table_name_ru(table),
+            'page_number': page_number,
         }
         return c
 
-    def get_table_employee(self):
+
+
+    def get_table_employee(self, page_number):
         table = "employee"
         cursor = self.conn.cursor()
         cursor.execute(f"SELECT * FROM {table}")
@@ -47,20 +86,33 @@ class JobService():
         table_info = []
         for i in result_1: 
             table_info.append(list(i))
-        print(table_info)
         for i in range(len(table_info)): 
             cursor.execute(f"SELECT job_title_name FROM job_title where id_job_title={table_info[i][2]}")
             table_info[i][2] = cursor.fetchall()[0][0]
-        columns = self.get_columns_names(table)[:-1:]
-        columns.append('job_title_name')
+        m = []
+        m_1 = []
+        for i in range(len(table_info)):
+            m_1.append(table_info[i])
+            if len(m_1) == 10:
+                m.append(m_1)
+                m_1 = []
+        if len(m_1) != 0:
+            m.append(m_1)
         c = {
-            'columns': columns,
-            'table_info': table_info,
+            'columns': self.get_columns_names_ru(table),
+            'table_info': m[page_number],
+            'number_of_pages': m,
             'table': table,
+            'table_ru': self.get_table_name_ru(table),
+            'page_number': page_number,
         }
         return c
 
-    def get_table_user(self):
+
+
+
+
+    def get_table_user(self, page_number):
         table = "user"
         cursor = self.conn.cursor()
         cursor.execute(f"SELECT * FROM {table}")
@@ -72,16 +124,26 @@ class JobService():
         for i in range(len(table_info)): 
             cursor.execute(f"SELECT hotel_room_name FROM hotel_room where id_hotel_room={table_info[i][2]}")
             table_info[i][2] = cursor.fetchall()[0][0]
-        columns = self.get_columns_names(table)[:-1:]
-        columns.append('hotel_room_name')
+        m = []
+        m_1 = []
+        for i in range(len(table_info)):
+            m_1.append(table_info[i])
+            if len(m_1) == 10:
+                m.append(m_1)
+                m_1 = []
+        if len(m_1) != 0:
+            m.append(m_1)
         c = {
-            'columns': columns,
-            'table_info': table_info,
+            'columns': self.get_columns_names_ru(table),
+            'table_info': m[page_number],
+            'number_of_pages': m,
             'table': table,
+            'table_ru': self.get_table_name_ru(table),
+            'page_number': page_number,
         }
         return c
     
-    def get_table_event(self):
+    def get_table_event(self, page_number):
         table = "event"
         cursor = self.conn.cursor()
         cursor.execute(f"SELECT * FROM {table}")
@@ -103,17 +165,22 @@ class JobService():
             if table_info[i][4] != None:
                 cursor.execute(f"SELECT track_name FROM track where id_track={table_info[i][4]}")
                 table_info[i][4] = cursor.fetchall()[0][0]
-
-
-        columns = self.get_columns_names(table)[:-4:]
-        columns.append('inventory_name')
-        columns.append('employee_name')
-        columns.append('user_name')
-        columns.append('track_name')
+        m = []
+        m_1 = []
+        for i in range(len(table_info)):
+            m_1.append(table_info[i])
+            if len(m_1) == 10:
+                m.append(m_1)
+                m_1 = []
+        if len(m_1) != 0:
+            m.append(m_1)
         c = {
-            'columns': columns,
-            'table_info': table_info,
+            'columns': self.get_columns_names_ru(table),
+            'table_info': m[page_number],
+            'number_of_pages': m,
             'table': table,
+            'table_ru': self.get_table_name_ru(table),
+            'page_number': page_number,
         }
         return c
 

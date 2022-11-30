@@ -8,32 +8,47 @@
 
 {% block index_content %}
   <div class="title_h">
-    <h3>{{ table }}</h3>
+    <h2>{{ table_ru }}</h2>
   </div>
-  <table class="table">
-    <thead>
-      <tr>
-        {% for item_col in columns %}
-          <th scope="col">{{item_col}}</th>
-        {% endfor %}
-        <th></th>
-        <th></th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for item_row in table_info %}
-      <tr>
-        {% for item_value in item_row %}
-          <td>{{item_value}}</td>
-        {% endfor %}
-        <td><a href="{% url 'redaction' table item_row.0 %}" type="button" class="btn btn-primary">Редактировать</a></td>
-        <td><a href="{% url 'delete' table item_row.0  %}" type="button" class="btn btn-danger">Удалить</a></td>
+  <div class="table_box">
+    <table class="table">
+      <thead>
+        <tr>
+          {% for item_col in columns %}
+            <th scope="col">{{item_col}}</th>
+          {% endfor %}
+          <th></th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for item_row in table_info %}
+        <tr>
+          {% for item_value in item_row %}
+            <td>{{item_value}}</td>
+          {% endfor %}
+          <td><a href="{% url 'redaction' table item_row.0 %}" type="button" class="btn btn-primary">Редактировать</a></td>
+          <td><a href="{% url 'delete' table item_row.0  %}" type="button" class="btn btn-danger">Удалить</a></td>
 
-      </tr>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% if number_of_pages|length > 1 %}
+    <div class="page_num">
+      {% for i in number_of_pages %}
+        <a href="{% url 'print_table' table forloop.counter0 %}" type="button" class="btn btn-info btn_n">{{forloop.counter}}</a>
       {% endfor %}
-    </tbody>
-  </table>
+    </div>
+  {% endif %}
+
+
+
   <div class="btn_add"><a href="{% url 'add' table %}" type="button" class="btn btn-success">Добавить запись</a></div>
+
+
+
 
 {% endblock %}
 

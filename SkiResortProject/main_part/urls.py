@@ -23,7 +23,7 @@ urlpatterns = [
     # path('add_event', add_event, name='add_event'),
 
 
-    path('print_table/<slug:table>/', print_table, name='print_table'),
+    path('print_table/<slug:table>/<int:page_number>', print_table, name='print_table'),
     path('delete/<slug:table>/<int:id>/', delete, name='delete'),
     path('add/<slug:table>/', add, name='add'),
     path('redaction/<slug:table>/<int:id>/', redaction, name='redaction'),

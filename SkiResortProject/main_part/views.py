@@ -10,17 +10,17 @@ def index(request):
 
 
 # функция для вывода всех таблиц
-def print_table(request, table):
+def print_table(request, table, page_number):
     template = "main_part/print_table.html"
     bd = JobService()
     if table not in ['employee', 'user', 'event']:
-        context = bd.get_table_for_print(table)
+        context = bd.get_table_for_print(table, page_number)
     elif table == 'employee':
-        context = bd.get_table_employee()
+        context = bd.get_table_employee(page_number)
     elif table == 'user':
-        context = bd.get_table_user()
+        context = bd.get_table_user(page_number)
     elif table == 'event':
-        context = bd.get_table_event()
+        context = bd.get_table_event(page_number)
     else:
         context = {}
     return render(request, template, context)
@@ -59,7 +59,7 @@ def add(request, table):
             for i in bd.get_columns_names(table)[1::]:
                 m.append(request.POST[i])
             bd.add_record(table, m)
-            return redirect('print_table', table)
+            return redirect('print_table', table, 0)
     else:
         if table == "job_title":
             form = AddJobTitle()
@@ -103,13 +103,12 @@ def redaction(request, table, id):
             form = AddInventory(request.POST)
         elif table == "event":
             form = AddEvent(request.POST)
-            
         if form.is_valid():
             m = []
             for i in bd.get_columns_names(table)[1::]:
                 m.append(request.POST[i])
             bd.redaction_record(table, m, id)
-            return redirect('print_table', table)
+            return redirect('print_table', table, 0)
     else:
         if table == "job_title":
             form = AddJobTitle()

@@ -1,4 +1,12 @@
 .box_form {
     width: 700px;
     margin: 0 auto;
+    margin-top: 100px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border: 2px solid rgb(52, 58, 64);
+    padding-bottom: 20px;
+    border-radius: 10px;
 }
