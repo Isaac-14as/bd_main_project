@@ -35,10 +35,15 @@
       </tbody>
     </table>
   </div>
+
   {% if number_of_pages|length > 1 %}
     <div class="page_num">
       {% for i in number_of_pages %}
-        <a href="{% url 'print_table' table forloop.counter0 %}" type="button" class="btn btn-info btn_n">{{forloop.counter}}</a>
+        {% if forloop.counter0 == page_number %}
+          <a href="{% url 'print_table' table forloop.counter0 %}" type="button" class="btn btn-success btn_n">{{forloop.counter}}</a>
+        {% else %}
+          <a href="{% url 'print_table' table forloop.counter0 %}" type="button" class="btn btn-info btn_n">{{forloop.counter}}</a>
+        {% endif %}
       {% endfor %}
     </div>
   {% endif %}

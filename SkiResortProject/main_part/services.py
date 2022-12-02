@@ -17,11 +17,11 @@ class JobService():
             print(ex)
     
 
-
+    # используется процедура
     def get_columns_names(self, table):
         cursor = self.conn.cursor()
         a = f"""'{table}'"""
-        cursor.execute(f"SELECT Column_name FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME LIKE {a} and TABLE_SCHEMA  = 'ski_resort' ORDER BY ORDINAL_POSITION")
+        cursor.execute(f"CALL getAllColumnsByTable({a});")
         result = cursor.fetchall()
         m = []
         for i in result:
@@ -86,9 +86,11 @@ class JobService():
         table_info = []
         for i in result_1: 
             table_info.append(list(i))
+        # использование хранимой функции
         for i in range(len(table_info)): 
-            cursor.execute(f"SELECT job_title_name FROM job_title where id_job_title={table_info[i][2]}")
-            table_info[i][2] = cursor.fetchall()[0][0]
+            cursor.execute(f"SELECT `ski_resort`.`getEmployeeJobNameById`({i})")
+            result_proc = cursor.fetchall()
+            table_info[i][2] = result_proc[0][0]
         m = []
         m_1 = []
         for i in range(len(table_info)):
@@ -107,8 +109,6 @@ class JobService():
             'page_number': page_number,
         }
         return c
-
-
 
 
 
@@ -185,8 +185,6 @@ class JobService():
         return c
 
 
-
-
     def delete(self, table, id):
         cursor = self.conn.cursor()
         a = 'id_' + table
@@ -228,17 +226,12 @@ class JobService():
         for i in range(len(m_1)):
             request_text += str(m_1[i] + ' = ' + values[i] + ', ')
         request_text = request_text[0:len(request_text) - 2]
-
-
         id_text = "id_" + table
         cursor.execute(f"UPDATE {table} SET {request_text} WHERE {id_text}={id}")
         self.conn.commit()
         self.conn.close()
     
-
- 
-    
-
+    # функция выдает список, заменяющий id на имена из таблиц
     def get_id(self, table):
         cursor = self.conn.cursor()
         cursor.execute(f"SELECT id_{table} FROM {table}")
@@ -248,5 +241,59 @@ class JobService():
             cursor.execute(f"SELECT {table}_name FROM {table} WHERE id_{table}={i[0]}")
             result_1 = cursor.fetchall()
             m.append((i[0], result_1[0][0]))
+            # можно добавить еще None
         return m
 
+
+
+
+    # def get_room_list(self):
+
+
+
+# Используются триггеры при добавлении сотрудника и пользователя (устанавливает заглавную букву имени, все остальные прописные)
+
+# DELIMITER $$
+# CREATE TRIGGER forNameEmployee
+# BEFORE INSERT ON employee
+# FOR EACH ROW
+# BEGIN
+# 	SET NEW.employee_name = CONCAT(UPPER(LEFT(NEW.employee_name, 1)), LOWER(SUBSTRING(NEW.employee_name,2)));
+# END $$
+# DELIMITER $
+
+# DELIMITER $$
+# CREATE TRIGGER forNameUser
+# BEFORE INSERT ON user
+# FOR EACH ROW
+# BEGIN
+# 	SET NEW.user_name = CONCAT(UPPER(LEFT(NEW.user_name, 1)), LOWER(SUBSTRING(NEW.user_name,2)));
+# END $$
+# DELIMITER $
+
+
+# функция getEmployeeJobNameById 
+
+# DELIMITER |
+# CREATE FUNCTION getEmployeeJobNameById(id int)
+#  RETURNS text
+#  DETERMINISTIC
+# BEGIN
+# 	DECLARE job_name text;
+#     DECLARE id_job int;
+#     SET id_job = (SELECT id_job_title FROM employee WHERE (id_employee=id));
+#     SET job_name = (SELECT job_title_name FROM job_title WHERE (id_job_title=id_job));
+# 	RETURN job_name;
+# 	END|
+
+
+# процедура getAllColumnsByTable
+
+# DELIMITER |
+# DROP procedure getAllColumnsByTable; |
+# CREATE PROCEDURE getAllColumnsByTable(tableH text)
+# BEGIN 
+# 	SELECT Column_name FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME LIKE tableH and TABLE_SCHEMA  = 'ski_resort' ORDER BY ORDINAL_POSITION;
+# END
+# |
+# DELIMITER |

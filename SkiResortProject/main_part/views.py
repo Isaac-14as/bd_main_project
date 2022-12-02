@@ -25,13 +25,15 @@ def print_table(request, table, page_number):
         context = {}
     return render(request, template, context)
 
+
+
 # функция удаления для всех таблиц (проблема с связанными таблицами)
 def delete(request, table, id):
     template = "main_part/delete.html"
     bd = JobService()
     if request.method == 'POST':
         bd.delete(table, id)
-        return redirect('print_table', table)
+        return redirect('print_table', table, 0)
     return render(request, template)
 
 
