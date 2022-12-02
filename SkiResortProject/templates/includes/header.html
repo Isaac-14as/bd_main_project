@@ -2,13 +2,13 @@
   <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
     <div class="navbar-nav">
       <a class="nav-item nav-link active" href="{% url 'index' %}">Главная</a>
-      <a class="nav-item nav-link" href="{% url 'print_table' 'job_title' 0 %}">Должности</a>
-      <a class="nav-item nav-link" href="{% url 'print_table' 'hotel_room' 0  %}">Номера отеля</a>
-      <a class="nav-item nav-link" href="{% url 'print_table' 'track' 0 %}">Трассы</a>
-      <a class="nav-item nav-link" href="{% url 'print_table' 'employee' 0 %}">Сотрудники</a>
-      <a class="nav-item nav-link" href="{% url 'print_table' 'user' 0 %}">Пользователи</a>
-      <a class="nav-item nav-link" href="{% url 'print_table' 'inventory' 0 %}">Инвентарь</a>
-      <a class="nav-item nav-link" href="{% url 'print_table' 'event' 0 %}">События</a>
+      <a class="nav-item nav-link" href="{% url 'print_table' 'job_title' 0 'id_job_title'%}">Должности</a>
+      <a class="nav-item nav-link" href="{% url 'print_table' 'hotel_room' 0 'id_hotel_room' %}">Номера отеля</a>
+      <a class="nav-item nav-link" href="{% url 'print_table' 'track' 0 'id_track' %}">Трассы</a>
+      <a class="nav-item nav-link" href="{% url 'print_table' 'employee' 0 'id_employee' %}">Сотрудники</a>
+      <a class="nav-item nav-link" href="{% url 'print_table' 'user' 0 'id_user' %}">Пользователи</a>
+      <a class="nav-item nav-link" href="{% url 'print_table' 'inventory' 0 'id_inventory' %}">Инвентарь</a>
+      <a class="nav-item nav-link" href="{% url 'print_table' 'event' 0 'id_event' %}">События</a>
     </div>
   </div>
 </nav>

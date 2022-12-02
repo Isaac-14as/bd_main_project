@@ -14,8 +14,8 @@
     <table class="table">
       <thead>
         <tr>
-          {% for item_col in columns %}
-            <th scope="col">{{item_col}}</th>
+          {% for item_col in columns_en_ru %}
+            <th scope="col"><a href="{% url 'print_table' table 0 item_col.1 %}">{{item_col.0}}</a></th>
           {% endfor %}
           <th></th>
           <th></th>
@@ -29,7 +29,6 @@
           {% endfor %}
           <td><a href="{% url 'redaction' table item_row.0 %}" type="button" class="btn btn-primary">Редактировать</a></td>
           <td><a href="{% url 'delete' table item_row.0  %}" type="button" class="btn btn-danger">Удалить</a></td>
-
         </tr>
         {% endfor %}
       </tbody>
@@ -40,9 +39,9 @@
     <div class="page_num">
       {% for i in number_of_pages %}
         {% if forloop.counter0 == page_number %}
-          <a href="{% url 'print_table' table forloop.counter0 %}" type="button" class="btn btn-success btn_n">{{forloop.counter}}</a>
+          <a href="{% url 'print_table' table forloop.counter0 sorth %}" type="button" class="btn btn-success btn_n">{{forloop.counter}}</a>
         {% else %}
-          <a href="{% url 'print_table' table forloop.counter0 %}" type="button" class="btn btn-info btn_n">{{forloop.counter}}</a>
+          <a href="{% url 'print_table' table forloop.counter0 sorth %}" type="button" class="btn btn-info btn_n">{{forloop.counter}}</a>
         {% endif %}
       {% endfor %}
     </div>

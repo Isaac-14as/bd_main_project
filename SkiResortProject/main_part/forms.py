@@ -7,7 +7,7 @@ class AddJobTitle(forms.Form):
 
 
 class AddHotelRoom(forms.Form):
-    hotel_room_name = forms.IntegerField(label='Номер', widget=forms.TextInput(attrs={'class': 'form-control'}))
+    hotel_room_name = forms.CharField(label='Номер', widget=forms.TextInput(attrs={'class': 'form-control'}))
     price = forms.DecimalField(label='Цена за сутки', widget=forms.TextInput(attrs={'class': 'form-control'}))
 
 

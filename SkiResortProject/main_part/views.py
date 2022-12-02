@@ -10,21 +10,19 @@ def index(request):
 
 
 # функция для вывода всех таблиц
-def print_table(request, table, page_number):
+def print_table(request, table, page_number, sorth):
     template = "main_part/print_table.html"
     bd = JobService()
     if table not in ['employee', 'user', 'event']:
-        context = bd.get_table_for_print(table, page_number)
+        context = bd.get_table_for_print(table, page_number, sorth)
     elif table == 'employee':
-        context = bd.get_table_employee(page_number)
+        context = bd.get_table_employee(page_number, sorth)
     elif table == 'user':
-        context = bd.get_table_user(page_number)
+        context = bd.get_table_user(page_number, sorth)
     elif table == 'event':
-        context = bd.get_table_event(page_number)
+        context = bd.get_table_event(page_number, sorth)
     else:
         context = {}
-
-    r = bd.get_table_user(page_number)
     return render(request, template, context)
 
 
@@ -35,7 +33,7 @@ def delete(request, table, id):
     bd = JobService()
     if request.method == 'POST':
         bd.delete(table, id)
-        return redirect('print_table', table, 0)
+        return redirect('print_table', table, 0, 'id_' + str(table))
     return render(request, template)
 
 
@@ -63,7 +61,7 @@ def add(request, table):
             for i in bd.get_columns_names(table)[1::]:
                 m.append(request.POST[i])
             bd.add_record(table, m)
-            return redirect('print_table', table, 0)
+            return redirect('print_table', table, 0, 'id_' + str(table))
     else:
         if table == "job_title":
             form = AddJobTitle()
@@ -112,7 +110,7 @@ def redaction(request, table, id):
             for i in bd.get_columns_names(table)[1::]:
                 m.append(request.POST[i])
             bd.redaction_record(table, m, id)
-            return redirect('print_table', table, 0)
+            return redirect('print_table', table, 0, 'id_' + str(table))
     else:
         if table == "job_title":
             form = AddJobTitle()
