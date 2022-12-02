@@ -7,11 +7,12 @@ class AddJobTitle(forms.Form):
 
 
 class AddHotelRoom(forms.Form):
-    number = forms.IntegerField(label='Номер', widget=forms.TextInput(attrs={'class': 'form-control'}))
+    hotel_room_name = forms.IntegerField(label='Номер', widget=forms.TextInput(attrs={'class': 'form-control'}))
     price = forms.DecimalField(label='Цена за сутки', widget=forms.TextInput(attrs={'class': 'form-control'}))
 
 
 class AddTrack(forms.Form):
+    track_name = forms.CharField(label='Название трассы', widget=forms.TextInput(attrs={'class': 'form-control'}))
     difficulty_level = forms.IntegerField(label='Уровень сложности', widget=forms.TextInput(attrs={'class': 'form-control'}))
     price = forms.DecimalField(label='Цена', widget=forms.TextInput(attrs={'class': 'form-control'}))
 

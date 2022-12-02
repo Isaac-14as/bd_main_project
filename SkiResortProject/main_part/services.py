@@ -111,19 +111,19 @@ class JobService():
         return c
 
 
-
     def get_table_user(self, page_number):
         table = "user"
         cursor = self.conn.cursor()
         cursor.execute(f"SELECT * FROM {table}")
         result_1 = cursor.fetchall()
+        print(result_1)
         table_info = []
         for i in result_1: 
             table_info.append(list(i))
-        print(table_info)
-        for i in range(len(table_info)): 
-            cursor.execute(f"SELECT hotel_room_name FROM hotel_room where id_hotel_room={table_info[i][2]}")
-            table_info[i][2] = cursor.fetchall()[0][0]
+        for i in range(len(table_info)):
+            if table_info[i][2] != None:
+                cursor.execute(f"SELECT hotel_room_name FROM hotel_room where id_hotel_room={table_info[i][2]}")
+                table_info[i][2] = cursor.fetchall()[0][0]
         m = []
         m_1 = []
         for i in range(len(table_info)):
@@ -142,6 +142,7 @@ class JobService():
             'page_number': page_number,
         }
         return c
+
     
     def get_table_event(self, page_number):
         table = "event"

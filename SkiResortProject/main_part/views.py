@@ -23,6 +23,8 @@ def print_table(request, table, page_number):
         context = bd.get_table_event(page_number)
     else:
         context = {}
+
+    r = bd.get_table_user(page_number)
     return render(request, template, context)
 
 
