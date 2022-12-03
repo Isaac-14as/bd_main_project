@@ -50,16 +50,31 @@ class AddEvent(forms.Form):
 
 
 
-class ProfileRegisterForm(UserCreationForm):
+class UserRegisterForm(UserCreationForm):
     username = forms.CharField(label='Логин', help_text='Логин пользователя должно состоять максимум из 50 символов', widget=forms.TextInput(attrs={'class': 'form-control'}))
-    # user_info_name = forms.CharField(label='Имя', help_text='Имя пользователя должно состоять максимум из 50 символов', widget=forms.TextInput(attrs={'class': 'form-control'}))
+    is_staff = forms.BooleanField(label='Роль персонала', required=False)
     password1 = forms.CharField(label='Пароль', widget=forms.PasswordInput(attrs={'class': 'form-control'}))
     password2 = forms.CharField(label='Подтверждение пароля', widget=forms.PasswordInput(attrs={'class': 'form-control'}))
-    # id_user_info = forms.IntegerField(label='id_info',required=False)
-    # user_info = forms.ModelChoiceField(queryset=UserInfo.objects.all(), label='id_info')
     class Meta:
-        model = Profile
-        fields = ('username', 
-                    # 'user_info_name', 
+        model = User
+        fields = ('username',
+                    'is_staff',
                     'password1', 
                     'password2')
+
+
+
+class UserLoginForm(AuthenticationForm):
+    username = forms.CharField(label='Логин', widget=forms.TextInput(attrs={'class': 'form-control'}))
+    password = forms.CharField(label='Пароль', widget=forms.PasswordInput(attrs={'class': 'form-control'}))
+
+    
+# class UserInfoForm(forms.Form):
+#     user_info_name = forms.CharField(label='Имя', help_text='Имя пользователя должно состоять максимум из 50 символов', widget=forms.TextInput(attrs={'class': 'form-control'}))
+#     user_info = forms.ModelChoiceField(queryset=UserInfo.objects.all(), label='id_info')
+#     class Meta:
+#         model = User
+#         fields = ('username', 
+#                     # 'user_info_name', 
+#                     'password1', 
+#                     'password2')

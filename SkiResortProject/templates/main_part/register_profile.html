@@ -9,13 +9,13 @@
 {% block index_content %}
 
 <div class='box_form'>
-  <h1>Добавление новой записи</h1>
+  <h1>Добавление новой должности</h1>
   <form action="" method="POST">
     {% csrf_token %}
     {{ form.as_p }}
-      <div class="btn_box">
-        <button type="submit" class="btn btn-success">Добавить</button>
-      </div>
+    <div class="btn_box">
+      <button type="submit" class="btn btn-success">Добавить</button>
+    </div>
   </form>
 </div>
 

@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+
+
+{% block links %}
+  {% load static %} 
+  <link rel="stylesheet" href="{% static 'main_part/css/account.css' %}">  
+{% endblock %}
+
+{% block index_content %}
+<div class="user_box">
+  <div class="box_title"><b>Ваш профиль</b></div>
+  <div class="first_name"><b>Логин: </b> {{ user.username }}</div>
+  {% if user.is_staff is False %}
+    <div class="role"><b>Роль:</b>гость курорта</div>
+    <div class="nameIn"><b>Имя на сайте:</b> {{ user_info_a.user_info_name }}</div>
+    <div class="room"><b>Комната отеля: </b> {{ hotel_room_a }}</div>
+  {% elif user.is_staff is True %}
+    <div class="role"><b>Роль:</b>персонал</div>
+  {% endif %}
+  {% if user.is_staff is False %}
+    <a href="{% url 'editing_profile'%}">Изменить профиль</a>
+  {% endif %}
+  
+
+
+</div>
+
+
+{% endblock %}

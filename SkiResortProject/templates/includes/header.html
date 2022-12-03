@@ -2,13 +2,28 @@
   <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
     <div class="navbar-nav">
       <a class="nav-item nav-link active" href="{% url 'index' %}">Главная</a>
-      <a class="nav-item nav-link" href="{% url 'print_table' 'job_title' 0 'id_job_title'%}">Должности</a>
-      <a class="nav-item nav-link" href="{% url 'print_table' 'hotel_room' 0 'id_hotel_room' %}">Номера отеля</a>
-      <a class="nav-item nav-link" href="{% url 'print_table' 'track' 0 'id_track' %}">Трассы</a>
-      <a class="nav-item nav-link" href="{% url 'print_table' 'employee' 0 'id_employee' %}">Сотрудники</a>
-      <a class="nav-item nav-link" href="{% url 'print_table' 'user_info' 0 'id_user_info' %}">Пользователи</a>
-      <a class="nav-item nav-link" href="{% url 'print_table' 'inventory' 0 'id_inventory' %}">Инвентарь</a>
-      <a class="nav-item nav-link" href="{% url 'print_table' 'event' 0 'id_event' %}">События</a>
+      {% if request.user.is_authenticated %}
+        <a class="nav-item nav-link" href="{% url 'print_table' 'job_title' 0 'id_job_title'%}">Должности</a>
+        <a class="nav-item nav-link" href="{% url 'print_table' 'hotel_room' 0 'id_hotel_room' %}">Номера отеля</a>
+        <a class="nav-item nav-link" href="{% url 'print_table' 'track' 0 'id_track' %}">Трассы</a>
+        <a class="nav-item nav-link" href="{% url 'print_table' 'employee' 0 'id_employee' %}">Сотрудники</a>
+        <a class="nav-item nav-link" href="{% url 'print_table' 'user_info' 0 'id_user_info' %}">Пользователи</a>
+        <a class="nav-item nav-link" href="{% url 'print_table' 'inventory' 0 'id_inventory' %}">Инвентарь</a>
+        <a class="nav-item nav-link" href="{% url 'print_table' 'event' 0 'id_event' %}">События</a>
+      {% endif %}
     </div>
+  </div>
+  <div class="navbar-nav">
+    {% if request.user.is_authenticated %}
+      <div class='user_text nav-item nav-link active'>Добро пожаловать, 
+        <a href="{% url 'account' %}">{{ user.username }}</a></div>
+      <div class="exitU nav-item nav-link active"><a href="{% url 'logout' %}">Выйти</a></div>
+    {% else %}
+      <div class="entry">
+        <a href="{% url 'login' %}"  class="entry nav-item nav-link active">
+          Вход/Регистрация
+        </a>
+      </div>
+    {% endif %}
   </div>
 </nav>

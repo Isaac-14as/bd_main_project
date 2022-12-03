@@ -1,0 +1,13 @@
+.role b {
+    margin-right: 5px;
+}
+
+.user_box {
+    width: 500px;
+    border: 2px solid black;
+    border-radius: 10px;
+    padding: 40px;
+    margin: 0 auto;
+    margin-top: 130px;
+    font-size: 25px;
+}

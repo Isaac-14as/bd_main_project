@@ -280,6 +280,7 @@ class JobService():
         cursor.execute(f"INSERT INTO {table} VALUES ({max_id}, {values})")
         self.conn.commit()
         self.conn.close()
+        return max_id
 
 
     def redaction_record(self, table, m, id):
@@ -316,6 +317,11 @@ class JobService():
             # можно добавить еще None
         return m
 
+    def get_room_by_id(self, id):
+        cursor = self.conn.cursor()
+        cursor.execute(f"SELECT hotel_room_name FROM hotel_room WHERE id_hotel_room={id}")
+        result = cursor.fetchall()
+        return result[0][0]
 
 
 

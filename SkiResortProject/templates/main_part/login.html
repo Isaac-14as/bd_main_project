@@ -1,23 +1,23 @@
 {% extends 'base.html' %}
 
 
+
 {% block links %}
   {% load static %} 
   <link rel="stylesheet" href="{% static 'main_part/css/add_job_title.css' %}">  
 {% endblock %}
 
 {% block index_content %}
-
 <div class='box_form'>
-  <h1>Регистрация</h1>
+  <h1>Вход</h1>
   <form action="" method="post">
     {% csrf_token %}
     {{ form.as_p }}
     <div class="btn_box">
-      <button type="submit" class="btn btn-dark w-50">Зарегистрироваться</button>
+      <button type="submit" class="btn btn-dark w-50">Войти</button>
     </div>
+    <a class="login_link" href="{% url 'register' %}">Нет аккаунта</a>
   </form>
-  <a class="login_link" href="{% url 'login' %}">Уже есть аккаунт</a>
-</div>
 
+</div>
 {% endblock %}

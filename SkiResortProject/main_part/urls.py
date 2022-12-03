@@ -8,10 +8,13 @@ urlpatterns = [
     path('delete/<slug:table>/<int:id>/', delete, name='delete'),
     path('add/<slug:table>/', add, name='add'),
     path('redaction/<slug:table>/<int:id>/', redaction, name='redaction'),
-
+    path('login/', user_login, name='login'),
+    path('logout/', user_logout, name='logout'),
 
     path('register/', register, name='register'),
-
+    path('register_profile/<int:id>/', register_profile, name='register_profile'),
+    path('editing_profile/', editing_profile, name='editing_profile'),
+    path('account/', account, name='account'),
     # path('login/', user_login, name='login'),
     # path('logout/', user_logout, name='logout'),
 

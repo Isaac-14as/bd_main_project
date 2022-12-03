@@ -17,8 +17,10 @@
           {% for item_col in columns_en_ru %}
             <th scope="col"><a href="{% url 'print_table' table 0 item_col.1 %}">{{item_col.0}}</a></th>
           {% endfor %}
-          <th></th>
-          <th></th>
+          {% if user.is_staff is True %}
+            <th></th>
+            <th></th>
+          {% endif %}
         </tr>
       </thead>
       <tbody>
@@ -27,8 +29,10 @@
           {% for item_value in item_row %}
             <td>{{item_value}}</td>
           {% endfor %}
-          <td><a href="{% url 'redaction' table item_row.0 %}" type="button" class="btn btn-primary">Редактировать</a></td>
-          <td><a href="{% url 'delete' table item_row.0  %}" type="button" class="btn btn-danger">Удалить</a></td>
+          {% if user.is_staff is True %}
+            <td><a href="{% url 'redaction' table item_row.0 %}" type="button" class="btn btn-primary">Редактировать</a></td>
+            <td><a href="{% url 'delete' table item_row.0  %}" type="button" class="btn btn-danger">Удалить</a></td>
+          {% endif %}
         </tr>
         {% endfor %}
       </tbody>
@@ -48,8 +52,9 @@
   {% endif %}
 
 
-
-  <div class="btn_add"><a href="{% url 'add' table %}" type="button" class="btn btn-success">Добавить запись</a></div>
+  {% if user.is_staff is True %}
+    <div class="btn_add"><a href="{% url 'add' table %}" type="button" class="btn btn-success">Добавить запись</a></div>
+  {% endif %}
 
 
 

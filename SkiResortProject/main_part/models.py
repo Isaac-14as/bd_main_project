@@ -70,7 +70,6 @@ class Track(models.Model):
 
 class UserInfo(models.Model):
     # UserInfo = models.OneToOneField(User, on_delete=models.CASCADE)
-    
     id_user_info = models.AutoField(primary_key=True)
     user_info_name = models.TextField(blank=True, null=True)
     id_hotel_room = models.ForeignKey(HotelRoom, models.DO_NOTHING, db_column='id_hotel_room', blank=True, null=True)
@@ -83,11 +82,14 @@ class UserInfo(models.Model):
         return self.user_info_name
 
 
-class Profile(AbstractUser):
-    pass
+# class Profile(AbstractUser):
+#     pass
 
 
-# class UserInfoProfile((models.Model):
-#          AUTOFIELD ID (PRIMARY KEY)
-#          ONE TO ONE USER INFO 
-#          ONE TO ONE PROFILE
+class UserInfoUser(models.Model):
+        user_info = models.OneToOneField(UserInfo, on_delete=models.CASCADE)
+        user = models.OneToOneField(User, on_delete=models.CASCADE)
+
+        #  AUTOFIELD ID (PRIMARY KEY)
+        #  ONE TO ONE USER INFO 
+        #  ONE TO ONE PROFILE
