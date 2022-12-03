@@ -1,6 +1,8 @@
+import pprint
 from django.shortcuts import render, get_object_or_404, redirect
 from .services import JobService
-
+from django.contrib import messages
+from django.contrib.auth import login, logout, authenticate
 from .forms import *
 
 def index(request):
@@ -13,11 +15,11 @@ def index(request):
 def print_table(request, table, page_number, sorth):
     template = "main_part/print_table.html"
     bd = JobService()
-    if table not in ['employee', 'user', 'event']:
+    if table not in ['employee', 'user_info', 'event']:
         context = bd.get_table_for_print(table, page_number, sorth)
     elif table == 'employee':
         context = bd.get_table_employee(page_number, sorth)
-    elif table == 'user':
+    elif table == 'user_info':
         context = bd.get_table_user(page_number, sorth)
     elif table == 'event':
         context = bd.get_table_event(page_number, sorth)
@@ -49,7 +51,7 @@ def add(request, table):
             form = AddTrack(request.POST)
         elif table == "employee":
             form = AddEmployee(request.POST)
-        elif table == "user":
+        elif table == "user_info":
             form = AddUser(request.POST)
         elif table == "inventory":
             form = AddInventory(request.POST)
@@ -71,7 +73,7 @@ def add(request, table):
             form = AddTrack()
         elif table == "employee":
             form = AddEmployee()
-        elif table == "user":
+        elif table == "user_info":
             form = AddUser()
         elif table == "inventory":
             form = AddInventory()
@@ -99,7 +101,7 @@ def redaction(request, table, id):
             form = AddTrack(request.POST)
         elif table == "employee":
             form = AddEmployee(request.POST)
-        elif table == "user":
+        elif table == "user_info":
             form = AddUser(request.POST)
         elif table == "inventory":
             form = AddInventory(request.POST)
@@ -120,7 +122,7 @@ def redaction(request, table, id):
             form = AddTrack()
         elif table == "employee":
             form = AddEmployee()
-        elif table == "user":
+        elif table == "user_info":
             form = AddUser()
         elif table == "inventory":
             form = AddInventory()
@@ -128,6 +130,24 @@ def redaction(request, table, id):
             form = AddEvent()
         else:
             form = AddHotelRoom()
+    context = {
+        'form': form,
+    }
+    return render(request, template, context)
+
+def register(request):
+    template = "main_part/register.html"
+    if request.method == 'POST':
+        form = ProfileRegisterForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)
+            messages.success(request, 'Вы успешно зарегистрировались')
+            return redirect('index')
+        else:
+            messages.error(request, 'Ошибка регистрации')
+    else:
+        form = ProfileRegisterForm()
     context = {
         'form': form,
     }

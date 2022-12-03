@@ -1,46 +1,93 @@
-from django.db import models
-import pymysql
+# from django.db import models
 from django.contrib.auth.models import AbstractUser
+
 from django.contrib.auth.models import User
-
-from django.db.models.signals import post_save
-from django.dispatch import receiver
-# class User(AbstractUser):
-#     ROLE_LIST = (
-#         ('Посетитель', 'Посетитель'),
-#         ('Администратор', 'Администратор'),
-#     )
-#     id_user = models.AutoField(primary_key=True)
-#     id_hotel_room = models.ForeignKey('ski_resort.hotel_room', on_delete=models.SET_NULL, null=True)
-#     role = models.CharField(max_length=30, verbose_name='Роль', choices=ROLE_LIST, default='Посетитель')
-#     class Meta:
-#         verbose_name = "Пользователь"
-#         verbose_name_plural = "Пользователи"
- 
-#     def __str__(self):
-#         return self.username
+from django.db import models
 
 
+class Employee(models.Model):
+    id_employee = models.AutoField(primary_key=True)
+    employee_name = models.TextField(blank=True, null=True)
+    id_job_title = models.ForeignKey('JobTitle', models.DO_NOTHING, db_column='id_job_title', blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'employee'
 
 
-# class Profile(models.Model):
-#     ROLE_LIST = (
-#         ('Посетитель', 'Посетитель'),
-#         ('Администратор', 'Администратор'),
-#     )
-#     user = models.OneToOneField(User, on_delete=models.CASCADE)
-#     id_hotel_room = models.ForeignKey('main_part.hotel_room', on_delete=models.SET_NULL, null=True)
-#     role = models.CharField(max_length=30, verbose_name='Роль', choices=ROLE_LIST, default='Посетитель')
+class Event(models.Model):
+    id_event = models.AutoField(primary_key=True)
+    id_inventory = models.ForeignKey('Inventory', models.DO_NOTHING, db_column='id_inventory', blank=True, null=True)
+    id_employee = models.ForeignKey(Employee, models.DO_NOTHING, db_column='id_employee', blank=True, null=True)
+    id_user_info = models.ForeignKey('UserInfo', models.DO_NOTHING, db_column='id_user_info', blank=True, null=True)
+    id_track = models.ForeignKey('Track', models.DO_NOTHING, db_column='id_track', blank=True, null=True)
 
-#     @receiver(post_save, sender=User)
-#     def create_user_profile(sender, instance, created, **kwargs):
-#         if created:
-#             Profile.objects.create(user=instance)
+    class Meta:
+        managed = False
+        db_table = 'event'
 
-#     @receiver(post_save, sender=User)
-#     def save_user_profile(sender, instance, **kwargs):
-#         instance.profile.save()
 
-#     class Meta:
-#         verbose_name = "Пользователь"
-#         verbose_name_plural = "Пользователи"
+class HotelRoom(models.Model):
+    id_hotel_room = models.AutoField(primary_key=True)
+    hotel_room_name = models.TextField(blank=True, null=True)
+    price = models.DecimalField(max_digits=19, decimal_places=2, blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'hotel_room'
+
+
+class Inventory(models.Model):
+    id_inventory = models.AutoField(primary_key=True)
+    inventory_name = models.TextField(blank=True, null=True)
+    price = models.DecimalField(max_digits=19, decimal_places=2, blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'inventory'
+
+
+class JobTitle(models.Model):
+    id_job_title = models.AutoField(primary_key=True)
+    job_title_name = models.TextField(blank=True, null=True)
+    salary = models.DecimalField(max_digits=19, decimal_places=2, blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'job_title'
+
+
+class Track(models.Model):
+    id_track = models.AutoField(primary_key=True)
+    track_name = models.TextField(blank=True, null=True)
+    difficulty_level = models.IntegerField(blank=True, null=True)
+    price = models.DecimalField(max_digits=19, decimal_places=2, blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'track'
+
+
+class UserInfo(models.Model):
+    # UserInfo = models.OneToOneField(User, on_delete=models.CASCADE)
+    
+    id_user_info = models.AutoField(primary_key=True)
+    user_info_name = models.TextField(blank=True, null=True)
+    id_hotel_room = models.ForeignKey(HotelRoom, models.DO_NOTHING, db_column='id_hotel_room', blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'user_info'
+    
+    def __str__(self):
+        return self.user_info_name
+
+
+class Profile(AbstractUser):
+    pass
+
+
+# class UserInfoProfile((models.Model):
+#          AUTOFIELD ID (PRIMARY KEY)
+#          ONE TO ONE USER INFO 
+#          ONE TO ONE PROFILE

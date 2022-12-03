@@ -9,4 +9,10 @@ urlpatterns = [
     path('add/<slug:table>/', add, name='add'),
     path('redaction/<slug:table>/<int:id>/', redaction, name='redaction'),
 
+
+    path('register/', register, name='register'),
+
+    # path('login/', user_login, name='login'),
+    # path('logout/', user_logout, name='logout'),
+
 ]

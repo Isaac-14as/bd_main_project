@@ -1,5 +1,7 @@
 from django import forms
 from .services import JobService
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm, UserChangeForm
+from .models import *
 
 class AddJobTitle(forms.Form):
     job_title_name = forms.CharField(label='Должность', widget=forms.TextInput(attrs={'class': 'form-control'}))
@@ -26,7 +28,7 @@ class AddEmployee(forms.Form):
 class AddUser(forms.Form):
     bd = JobService()
     HOTEL_ROOM_LIST = bd.get_id('hotel_room')
-    user_name = forms.CharField(label='Имя гостя', widget=forms.TextInput(attrs={'class': 'form-control'}))
+    user_info_name = forms.CharField(label='Имя гостя', widget=forms.TextInput(attrs={'class': 'form-control'}))
     id_hotel_room = forms.ChoiceField(label='Номер отеля', choices=HOTEL_ROOM_LIST)
 
 
@@ -39,9 +41,25 @@ class AddEvent(forms.Form):
     bd = JobService()
     INVENTORY_LIST = bd.get_id('inventory')
     EMPLOYEE_LIST = bd.get_id('employee')
-    USER_LIST = bd.get_id('user')
+    USER_LIST = bd.get_id('user_info')
     TRACK_LIST = bd.get_id('track')
     id_inventory = forms.ChoiceField(label='Название инвентаря', choices=INVENTORY_LIST)
     id_employee = forms.ChoiceField(label='Имя сотрудника', choices=EMPLOYEE_LIST)
-    id_user = forms.ChoiceField(label='Имя пользователя', choices=USER_LIST)
+    id_user_info = forms.ChoiceField(label='Имя пользователя', choices=USER_LIST)
     id_track = forms.ChoiceField(label='Название трассы', choices=TRACK_LIST)
+
+
+
+class ProfileRegisterForm(UserCreationForm):
+    username = forms.CharField(label='Логин', help_text='Логин пользователя должно состоять максимум из 50 символов', widget=forms.TextInput(attrs={'class': 'form-control'}))
+    # user_info_name = forms.CharField(label='Имя', help_text='Имя пользователя должно состоять максимум из 50 символов', widget=forms.TextInput(attrs={'class': 'form-control'}))
+    password1 = forms.CharField(label='Пароль', widget=forms.PasswordInput(attrs={'class': 'form-control'}))
+    password2 = forms.CharField(label='Подтверждение пароля', widget=forms.PasswordInput(attrs={'class': 'form-control'}))
+    # id_user_info = forms.IntegerField(label='id_info',required=False)
+    # user_info = forms.ModelChoiceField(queryset=UserInfo.objects.all(), label='id_info')
+    class Meta:
+        model = Profile
+        fields = ('username', 
+                    # 'user_info_name', 
+                    'password1', 
+                    'password2')

@@ -34,7 +34,7 @@ class JobService():
             'hotel_room': ['id', 'номер', 'цена за ночь'],
             'track': ['id', 'название трассы', 'уровень сложности', 'цена'],
             'employee': ['id', 'имя сотрудника', 'название должности'],
-            'user': ['id', 'имя пользователя', 'номер отеля'],
+            'user_info': ['id', 'имя пользователя', 'номер отеля'],
             'inventory': ['id', 'название инвентаря', 'цена аренды'],
             'event': ['id', 'название инвентаря', 'имя сотрудника', 'имя пользователя', 'название трассы'],
             }
@@ -46,7 +46,7 @@ class JobService():
             'hotel_room': 'Номера отеля',
             'track': 'Трассы',
             'employee': 'Сотрудники',
-            'user': 'Пользователи',
+            'user_info': 'Пользователи',
             'inventory': 'Инвентарь',
             'event': 'События',
         }
@@ -140,7 +140,7 @@ class JobService():
 
 
     def get_table_user(self, page_number, sorth):
-        table = "user"
+        table = "user_info"
         cursor = self.conn.cursor()
         cursor.execute(f"SELECT * FROM {table} ORDER BY {sorth}")
         result_1 = cursor.fetchall()
@@ -211,7 +211,7 @@ class JobService():
             else:
                 table_info[i][2] = 'None'
             if table_info[i][3] != None:
-                cursor.execute(f"SELECT user_name FROM user where id_user={table_info[i][3]}")
+                cursor.execute(f"SELECT user_info_name FROM user_info where id_user_info={table_info[i][3]}")
                 table_info[i][3] = cursor.fetchall()[0][0]
             else:
                 table_info[i][3] = 'None'
@@ -336,10 +336,10 @@ class JobService():
 
 # DELIMITER $$
 # CREATE TRIGGER forNameUser
-# BEFORE INSERT ON user
+# BEFORE INSERT ON user_info
 # FOR EACH ROW
 # BEGIN
-# 	SET NEW.user_name = CONCAT(UPPER(LEFT(NEW.user_name, 1)), LOWER(SUBSTRING(NEW.user_name,2)));
+# 	SET NEW.user_info_name = CONCAT(UPPER(LEFT(NEW.user_info_name, 1)), LOWER(SUBSTRING(NEW.user_info_name,2)));
 # END $$
 # DELIMITER $
 

@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+
+{% comment %} {% block links %}
+  {% load static %} 
+  <link rel="stylesheet" href="{% static 'report/css/register.css' %}">  
+{% endblock %} {% endcomment %}
+
+{% block index_content %}
+
+<div class='box_form'>
+  <h1>Регистрация</h1>
+  <form action="" method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <div class="btn_box">
+      <button type="submit" class="btn btn-dark w-50">Зарегистрироваться</button>
+    </div>
+  </form>
+  {% comment %} <a class="login_link" href="{% url 'login' %}">Уже есть аккаунт</a> {% endcomment %}
+</div>
+
+{% endblock %}
