@@ -13,6 +13,18 @@
       {% endif %}
     </div>
   </div>
+  <div class="navbar-nav srch">
+    <div class="input-group srch_2">
+      <nav class="navbar navbar-dark bg-dark">
+        <form class="form-inline">
+          <input class="form-control mr-sm-2" type="search" placeholder="Поиск" aria-label="Search" name="search_pattern">
+          <button class="btn btn-primary my-2 my-sm-0" type="submit">Поиск</button>
+        </form>
+      </nav>
+    </div>
+  </div>
+
+    
   <div class="navbar-nav">
     {% if request.user.is_authenticated %}
       <div class='user_text nav-item nav-link active'>Добро пожаловать, 

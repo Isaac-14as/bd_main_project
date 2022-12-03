@@ -53,207 +53,335 @@ class JobService():
         return d[table]
 
 
-    def get_table_for_print(self, table, page_number, sorth):
+    def get_table_for_print(self, table, page_number, sorth, search_pattern):
         cursor = self.conn.cursor()
-        cursor.execute(f"SELECT * FROM {table} ORDER BY {sorth}")
-        result_1 = cursor.fetchall()
-        m = []
-        m_1 = []
-        for i in range(len(result_1)):
-            m_1.append(result_1[i])
-            if len(m_1) == 10:
+        srch = []
+        if search_pattern == "":
+            cursor.execute(f"SELECT * FROM {table} ORDER BY {sorth}")
+            result_1 = cursor.fetchall()
+        else:
+            search_pattern = f'''"%{search_pattern}%"'''
+            for i in self.get_columns_names(table)[1::]:
+                cursor.execute(f"SELECT * FROM {table} WHERE {i} LIKE {search_pattern} ORDER BY {sorth}")
+                for j in cursor.fetchall():
+                    srch.append(j)
+            result_1 = list(srch)
+
+        if result_1:
+            t = []
+            for i in range(len(result_1)):
+                if result_1[i] not in t:
+                    t.append(result_1[i])
+            result_1 = t
+            print("22222", result_1)
+            m = []
+            m_1 = []
+            for i in range(len(result_1)):
+                m_1.append(result_1[i])
+                if len(m_1) == 10:
+                    m.append(m_1)
+                    m_1 = []
+            if len(m_1) != 0:
                 m.append(m_1)
-                m_1 = []
-        if len(m_1) != 0:
-            m.append(m_1)
-        columns_en_ru = []
-        a = self.get_columns_names_ru(table)
-        t_1 = f"""'{table}'"""
-        cursor.execute(f"CALL getAllColumnsByTable({t_1});")
-        b = cursor.fetchall()
-        for i in range(len(a)):
-            columns_en_ru.append((a[i], b[i][0]))
-        c = {
-            'columns_en_ru': columns_en_ru,
-            'columns': self.get_columns_names_ru(table),
-            'table_info': m[page_number],
-            'number_of_pages': m,
-            'table': table,
-            'table_ru': self.get_table_name_ru(table),
-            'page_number': page_number,
-            'sorth': sorth,
-        }
+            columns_en_ru = []
+            a = self.get_columns_names_ru(table)
+            t_1 = f"""'{table}'"""
+            cursor.execute(f"CALL getAllColumnsByTable({t_1});")
+            b = cursor.fetchall()
+            for i in range(len(a)):
+                columns_en_ru.append((a[i], b[i][0]))
+            c = {
+                'columns_en_ru': columns_en_ru,
+                'columns': self.get_columns_names_ru(table),
+                'table_info': m[page_number],
+                'number_of_pages': m,
+                'table': table,
+                'table_ru': self.get_table_name_ru(table),
+                'page_number': page_number,
+                'sorth': sorth,
+            }
+        else:
+            columns_en_ru = []
+            a = self.get_columns_names_ru(table)
+            t_1 = f"""'{table}'"""
+            cursor.execute(f"CALL getAllColumnsByTable({t_1});")
+            b = cursor.fetchall()
+            for i in range(len(a)):
+                columns_en_ru.append((a[i], b[i][0]))
+            c = {
+                'columns_en_ru': columns_en_ru,
+                'columns': self.get_columns_names_ru(table),
+                'table': table,
+                'table_ru': self.get_table_name_ru(table),
+                'sorth': sorth,
+            }
         return c
 
 
 
-    def get_table_employee(self, page_number, sorth):
+    def get_table_employee(self, page_number, sorth, search_pattern):
         table = "employee"
         cursor = self.conn.cursor()
-        cursor.execute(f"SELECT * FROM {table} ORDER BY {sorth}")
-        result_1 = cursor.fetchall()
-        table_info = []
-        for i in result_1: 
-            table_info.append(list(i))
-        # использование хранимой функции
-        for i in range(len(table_info)):
-            cursor.execute(f"SELECT `ski_resort`.`getEmployeeJobNameById`({table_info[i][0]})")
-            result_proc = cursor.fetchall()
-            table_info[i][2] = result_proc[0][0]
-            if result_proc[0][0] is None:
-                table_info[i][2] = 'None'
-        nm_s = 0
-        t_1 = f'''"{table}"'''
-        cursor.execute(f"CALL getAllColumnsByTable({t_1});")
-        c_1 = cursor.fetchall()
-        for i in range(len(c_1)):
-            if c_1[i][0] == sorth:
-                nm_s = i
-        table_info = sorted(table_info, key=lambda item: item[nm_s])
-        m = []
-        m_1 = []
-        for i in range(len(table_info)):
-            m_1.append(table_info[i])
-            if len(m_1) == 10:
+        
+        srch = []
+        if search_pattern == "":
+            cursor.execute(f"SELECT * FROM {table} ORDER BY {sorth}")
+            result_1 = cursor.fetchall()
+        else:
+            search_pattern = f'''"%{search_pattern}%"'''
+            for i in self.get_columns_names(table)[1::]:
+                cursor.execute(f"SELECT * FROM {table} WHERE {i} LIKE {search_pattern} ORDER BY {sorth}")
+                for j in cursor.fetchall():
+                    srch.append(j)
+            result_1 = list(srch)
+        t = []
+        for i in range(len(result_1)):
+            if result_1[i] not in t:
+                t.append(result_1[i])
+        result_1 = t
+
+        if result_1:
+            table_info = []
+            for i in result_1: 
+                table_info.append(list(i))
+            # использование хранимой функции
+            for i in range(len(table_info)):
+                cursor.execute(f"SELECT `ski_resort`.`getEmployeeJobNameById`({table_info[i][0]})")
+                result_proc = cursor.fetchall()
+                table_info[i][2] = result_proc[0][0]
+                if result_proc[0][0] is None:
+                    table_info[i][2] = 'None'
+            nm_s = 0
+            t_1 = f'''"{table}"'''
+            cursor.execute(f"CALL getAllColumnsByTable({t_1});")
+            c_1 = cursor.fetchall()
+            for i in range(len(c_1)):
+                if c_1[i][0] == sorth:
+                    nm_s = i
+            table_info = sorted(table_info, key=lambda item: item[nm_s])
+            m = []
+            m_1 = []
+            for i in range(len(table_info)):
+                m_1.append(table_info[i])
+                if len(m_1) == 10:
+                    m.append(m_1)
+                    m_1 = []
+            if len(m_1) != 0:
                 m.append(m_1)
-                m_1 = []
-        if len(m_1) != 0:
-            m.append(m_1)
-        columns_en_ru = []
-        a = self.get_columns_names_ru(table)
-        t_1 = f"""'{table}'"""
-        cursor.execute(f"CALL getAllColumnsByTable({t_1});")
-        b = cursor.fetchall()
-        for i in range(len(a)):
-            columns_en_ru.append((a[i], b[i][0]))
-        c = {
-            'columns_en_ru': columns_en_ru,
-            'columns': self.get_columns_names_ru(table),
-            'table_info': m[page_number],
-            'number_of_pages': m,
-            'table': table,
-            'table_ru': self.get_table_name_ru(table),
-            'page_number': page_number,
-            'sorth': sorth,
-        }
+            columns_en_ru = []
+            a = self.get_columns_names_ru(table)
+            t_1 = f"""'{table}'"""
+            cursor.execute(f"CALL getAllColumnsByTable({t_1});")
+            b = cursor.fetchall()
+            for i in range(len(a)):
+                columns_en_ru.append((a[i], b[i][0]))
+            c = {
+                'columns_en_ru': columns_en_ru,
+                'columns': self.get_columns_names_ru(table),
+                'table_info': m[page_number],
+                'number_of_pages': m,
+                'table': table,
+                'table_ru': self.get_table_name_ru(table),
+                'page_number': page_number,
+                'sorth': sorth,
+            }
+        else:
+            columns_en_ru = []
+            a = self.get_columns_names_ru(table)
+            t_1 = f"""'{table}'"""
+            cursor.execute(f"CALL getAllColumnsByTable({t_1});")
+            b = cursor.fetchall()
+            for i in range(len(a)):
+                columns_en_ru.append((a[i], b[i][0]))
+            c = {
+                'columns_en_ru': columns_en_ru,
+                'columns': self.get_columns_names_ru(table),
+                'table': table,
+                'table_ru': self.get_table_name_ru(table),
+                'sorth': sorth,
+            }
         return c
 
 
-    def get_table_user(self, page_number, sorth):
+    def get_table_user(self, page_number, sorth, search_pattern):
         table = "user_info"
         cursor = self.conn.cursor()
-        cursor.execute(f"SELECT * FROM {table} ORDER BY {sorth}")
-        result_1 = cursor.fetchall()
-        table_info = []
-        for i in result_1: 
-            table_info.append(list(i))
-        for i in range(len(table_info)):
-            if table_info[i][2] != None:
-                cursor.execute(f"SELECT hotel_room_name FROM hotel_room where id_hotel_room={table_info[i][2]}")
-                table_info[i][2] = cursor.fetchall()[0][0]
-            else:
-                table_info[i][2] = 'None'
-        nm_s = 0
-        t_1 = f'''"{table}"'''
-        cursor.execute(f"CALL getAllColumnsByTable({t_1});")
-        c_1 = cursor.fetchall()
-        for i in range(len(c_1)):
-            if c_1[i][0] == sorth:
-                nm_s = i
-        table_info = sorted(table_info, key=lambda item: item[nm_s])
 
-        m = []
-        m_1 = []
-        for i in range(len(table_info)):
-            m_1.append(table_info[i])
-            if len(m_1) == 10:
+
+        srch = []
+        if search_pattern == "":
+            cursor.execute(f"SELECT * FROM {table} ORDER BY {sorth}")
+            result_1 = cursor.fetchall()
+        else:
+            search_pattern = f'''"%{search_pattern}%"'''
+            for i in self.get_columns_names(table)[1::]:
+                cursor.execute(f"SELECT * FROM {table} WHERE {i} LIKE {search_pattern} ORDER BY {sorth}")
+                for j in cursor.fetchall():
+                    srch.append(j)
+            result_1 = list(srch)
+        t = []
+        for i in range(len(result_1)):
+            if result_1[i] not in t:
+                t.append(result_1[i])
+        result_1 = t
+        if result_1:
+
+            table_info = []
+            for i in result_1: 
+                table_info.append(list(i))
+            for i in range(len(table_info)):
+                if table_info[i][2] != None:
+                    cursor.execute(f"SELECT hotel_room_name FROM hotel_room where id_hotel_room={table_info[i][2]}")
+                    table_info[i][2] = cursor.fetchall()[0][0]
+                else:
+                    table_info[i][2] = 'None'
+            nm_s = 0
+            t_1 = f'''"{table}"'''
+            cursor.execute(f"CALL getAllColumnsByTable({t_1});")
+            c_1 = cursor.fetchall()
+            for i in range(len(c_1)):
+                if c_1[i][0] == sorth:
+                    nm_s = i
+            table_info = sorted(table_info, key=lambda item: item[nm_s])
+
+            m = []
+            m_1 = []
+            for i in range(len(table_info)):
+                m_1.append(table_info[i])
+                if len(m_1) == 10:
+                    m.append(m_1)
+                    m_1 = []
+            if len(m_1) != 0:
                 m.append(m_1)
-                m_1 = []
-        if len(m_1) != 0:
-            m.append(m_1)
-        columns_en_ru = []
-        a = self.get_columns_names_ru(table)
-        t_1 = f"""'{table}'"""
-        cursor.execute(f"CALL getAllColumnsByTable({t_1});")
-        b = cursor.fetchall()
-        for i in range(len(a)):
-            columns_en_ru.append((a[i], b[i][0]))
-        c = {
-            'columns_en_ru': columns_en_ru,
-            'columns': self.get_columns_names_ru(table),
-            'table_info': m[page_number],
-            'number_of_pages': m,
-            'table': table,
-            'table_ru': self.get_table_name_ru(table),
-            'page_number': page_number,
-            'sorth': sorth,
-        }
+            columns_en_ru = []
+            a = self.get_columns_names_ru(table)
+            t_1 = f"""'{table}'"""
+            cursor.execute(f"CALL getAllColumnsByTable({t_1});")
+            b = cursor.fetchall()
+            for i in range(len(a)):
+                columns_en_ru.append((a[i], b[i][0]))
+            c = {
+                'columns_en_ru': columns_en_ru,
+                'columns': self.get_columns_names_ru(table),
+                'table_info': m[page_number],
+                'number_of_pages': m,
+                'table': table,
+                'table_ru': self.get_table_name_ru(table),
+                'page_number': page_number,
+                'sorth': sorth,
+            }
+        else:
+            columns_en_ru = []
+            a = self.get_columns_names_ru(table)
+            t_1 = f"""'{table}'"""
+            cursor.execute(f"CALL getAllColumnsByTable({t_1});")
+            b = cursor.fetchall()
+            for i in range(len(a)):
+                columns_en_ru.append((a[i], b[i][0]))
+            c = {
+                'columns_en_ru': columns_en_ru,
+                'columns': self.get_columns_names_ru(table),
+                'table': table,
+                'table_ru': self.get_table_name_ru(table),
+                'sorth': sorth,
+            }
         return c
 
     
-    def get_table_event(self, page_number, sorth):
+    def get_table_event(self, page_number, sorth, search_pattern):
         table = "event"
         cursor = self.conn.cursor()
-        cursor.execute(f"SELECT * FROM {table} ORDER BY {sorth}")
-        result_1 = cursor.fetchall()
-        table_info = []
-        for i in result_1: 
-            table_info.append(list(i))
-        for i in range(len(table_info)):
-            if table_info[i][1] != None:
-                cursor.execute(f"SELECT inventory_name FROM inventory where id_inventory={table_info[i][1]}")
-                table_info[i][1] = cursor.fetchall()[0][0]
-            else:
-                table_info[i][1] = 'None'
-            if table_info[i][2] != None:
-                cursor.execute(f"SELECT employee_name FROM employee where id_employee={table_info[i][2]}")
-                table_info[i][2] = cursor.fetchall()[0][0]
-            else:
-                table_info[i][2] = 'None'
-            if table_info[i][3] != None:
-                cursor.execute(f"SELECT user_info_name FROM user_info where id_user_info={table_info[i][3]}")
-                table_info[i][3] = cursor.fetchall()[0][0]
-            else:
-                table_info[i][3] = 'None'
-            if table_info[i][4] != None:
-                cursor.execute(f"SELECT track_name FROM track where id_track={table_info[i][4]}")
-                table_info[i][4] = cursor.fetchall()[0][0]
-            else:
-                table_info[i][4] = 'None'
-        nm_s = 0
-        t_1 = f'''"{table}"'''
-        cursor.execute(f"CALL getAllColumnsByTable({t_1});")
-        c_1 = cursor.fetchall()
-        for i in range(len(c_1)):
-            if c_1[i][0] == sorth:
-                nm_s = i
-        table_info = sorted(table_info, key=lambda item: item[nm_s])
-        m = []
-        m_1 = []
-        for i in range(len(table_info)):
-            m_1.append(table_info[i])
-            if len(m_1) == 10:
+
+        srch = []
+        if search_pattern == "":
+            cursor.execute(f"SELECT * FROM {table} ORDER BY {sorth}")
+            result_1 = cursor.fetchall()
+        else:
+            search_pattern = f'''"%{search_pattern}%"'''
+            for i in self.get_columns_names(table)[1::]:
+                cursor.execute(f"SELECT * FROM {table} WHERE {i} LIKE {search_pattern} ORDER BY {sorth}")
+                for j in cursor.fetchall():
+                    srch.append(j)
+            result_1 = list(srch)
+        t = []
+        for i in range(len(result_1)):
+            if result_1[i] not in t:
+                t.append(result_1[i])
+        result_1 = t
+        if result_1:
+            table_info = []
+            for i in result_1: 
+                table_info.append(list(i))
+            for i in range(len(table_info)):
+                if table_info[i][1] != None:
+                    cursor.execute(f"SELECT inventory_name FROM inventory where id_inventory={table_info[i][1]}")
+                    table_info[i][1] = cursor.fetchall()[0][0]
+                else:
+                    table_info[i][1] = 'None'
+                if table_info[i][2] != None:
+                    cursor.execute(f"SELECT employee_name FROM employee where id_employee={table_info[i][2]}")
+                    table_info[i][2] = cursor.fetchall()[0][0]
+                else:
+                    table_info[i][2] = 'None'
+                if table_info[i][3] != None:
+                    cursor.execute(f"SELECT user_info_name FROM user_info where id_user_info={table_info[i][3]}")
+                    table_info[i][3] = cursor.fetchall()[0][0]
+                else:
+                    table_info[i][3] = 'None'
+                if table_info[i][4] != None:
+                    cursor.execute(f"SELECT track_name FROM track where id_track={table_info[i][4]}")
+                    table_info[i][4] = cursor.fetchall()[0][0]
+                else:
+                    table_info[i][4] = 'None'
+            nm_s = 0
+            t_1 = f'''"{table}"'''
+            cursor.execute(f"CALL getAllColumnsByTable({t_1});")
+            c_1 = cursor.fetchall()
+            for i in range(len(c_1)):
+                if c_1[i][0] == sorth:
+                    nm_s = i
+            table_info = sorted(table_info, key=lambda item: item[nm_s])
+            m = []
+            m_1 = []
+            for i in range(len(table_info)):
+                m_1.append(table_info[i])
+                if len(m_1) == 10:
+                    m.append(m_1)
+                    m_1 = []
+            if len(m_1) != 0:
                 m.append(m_1)
-                m_1 = []
-        if len(m_1) != 0:
-            m.append(m_1)
-        columns_en_ru = []
-        a = self.get_columns_names_ru(table)
-        t_1 = f"""'{table}'"""
-        cursor.execute(f"CALL getAllColumnsByTable({t_1});")
-        b = cursor.fetchall()
-        for i in range(len(a)):
-            columns_en_ru.append((a[i], b[i][0]))
-        c = {
-            'columns_en_ru': columns_en_ru,
-            'columns': self.get_columns_names_ru(table),
-            'table_info': m[page_number],
-            'number_of_pages': m,
-            'table': table,
-            'table_ru': self.get_table_name_ru(table),
-            'page_number': page_number,
-            'sorth': sorth,
-        }
+            columns_en_ru = []
+            a = self.get_columns_names_ru(table)
+            t_1 = f"""'{table}'"""
+            cursor.execute(f"CALL getAllColumnsByTable({t_1});")
+            b = cursor.fetchall()
+            for i in range(len(a)):
+                columns_en_ru.append((a[i], b[i][0]))
+            c = {
+                'columns_en_ru': columns_en_ru,
+                'columns': self.get_columns_names_ru(table),
+                'table_info': m[page_number],
+                'number_of_pages': m,
+                'table': table,
+                'table_ru': self.get_table_name_ru(table),
+                'page_number': page_number,
+                'sorth': sorth,
+            }
+        else:
+            columns_en_ru = []
+            a = self.get_columns_names_ru(table)
+            t_1 = f"""'{table}'"""
+            cursor.execute(f"CALL getAllColumnsByTable({t_1});")
+            b = cursor.fetchall()
+            for i in range(len(a)):
+                columns_en_ru.append((a[i], b[i][0]))
+            c = {
+                'columns_en_ru': columns_en_ru,
+                'columns': self.get_columns_names_ru(table),
+                'table': table,
+                'table_ru': self.get_table_name_ru(table),
+                'sorth': sorth,
+            }
         return c
 
 

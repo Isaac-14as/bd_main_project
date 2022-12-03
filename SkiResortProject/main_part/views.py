@@ -13,24 +13,6 @@ def index(request):
 
 
 
-# функция для вывода всех таблиц
-def print_table(request, table, page_number, sorth):
-    template = "main_part/print_table.html"
-    bd = JobService()
-    if table not in ['employee', 'user_info', 'event']:
-        context = bd.get_table_for_print(table, page_number, sorth)
-    elif table == 'employee':
-        context = bd.get_table_employee(page_number, sorth)
-    elif table == 'user_info':
-        context = bd.get_table_user(page_number, sorth)
-    elif table == 'event':
-        context = bd.get_table_event(page_number, sorth)
-    else:
-        context = {}
-    return render(request, template, context)
-
-
-
 # функция удаления для всех таблиц (проблема с связанными таблицами)
 def delete(request, table, id):
     template = "main_part/delete.html"
@@ -237,4 +219,28 @@ def account(request):
     else:
         context = {
         }
+    return render(request, template, context)
+
+
+
+# функция для вывода всех таблиц
+def print_table(request, table, page_number, sorth):
+    template = "main_part/print_table.html"
+    search_pattern = request.GET.get('search_pattern')
+
+    # seatch_query = request.GET.get
+    if search_pattern is None:
+        search_pattern = ""
+    print(search_pattern)
+    bd = JobService()
+    if table not in ['employee', 'user_info', 'event']:
+        context = bd.get_table_for_print(table, page_number, sorth, search_pattern)
+    elif table == 'employee':
+        context = bd.get_table_employee(page_number, sorth, search_pattern)
+    elif table == 'user_info':
+        context = bd.get_table_user(page_number, sorth, search_pattern)
+    elif table == 'event':
+        context = bd.get_table_event(page_number, sorth, search_pattern)
+    else:
+        context = {}
     return render(request, template, context)

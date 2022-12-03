@@ -11,3 +11,8 @@
     margin-top: 130px;
     font-size: 25px;
 }
+.box_title {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
