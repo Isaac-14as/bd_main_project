@@ -145,7 +145,7 @@ def register(request):
 def register_profile(request):
     template = "main_part/register_profile.html"
     bd = JobService()
-    user_cr = User.objects.get(id=request.user)
+    user_cr = User.objects.get(id=request.user.id)
     if request.method == 'POST':
         form = AddUser(request.POST)
         if form.is_valid():

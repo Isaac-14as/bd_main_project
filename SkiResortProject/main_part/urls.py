@@ -12,7 +12,7 @@ urlpatterns = [
     path('logout/', user_logout, name='logout'),
 
     path('register/', register, name='register'),
-    path('register_profile/<int:id>/', register_profile, name='register_profile'),
+    path('register_profile/', register_profile, name='register_profile'),
     path('editing_profile/', editing_profile, name='editing_profile'),
     path('account/', account, name='account'),
     # path('login/', user_login, name='login'),
