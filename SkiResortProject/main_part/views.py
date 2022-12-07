@@ -188,7 +188,7 @@ def user_logout(request):
 def editing_profile(request):
     template = "main_part/editing_profile.html"
     bd = JobService()
-    prof = UserInfoUser.objects.get(user=request.user)
+    prof = UserInfoUser.objects.get(user=request.user.id)
     if request.method == 'POST':
         form = AddUser(request.POST)
         if form.is_valid():
@@ -207,9 +207,10 @@ def editing_profile(request):
 def account(request):
     template = "main_part/account.html"
     bd = JobService()
+    user_1 = User.objects.get(id=request.user.id)
     print(request.user.is_staff)
     if request.user.is_staff is False:
-        prof = UserInfoUser.objects.get(user=request.user)
+        prof = UserInfoUser.objects.get(user=user_1)
         user_info_a = prof.user_info
         hotel_room_a = bd.get_room_by_id(user_info_a.id_hotel_room.id_hotel_room)
         context = {
